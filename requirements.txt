@@ -1,4 +1,4 @@
-aiohttp==3.7.3
 pyjade==4.0.0
 OpenCC==1.1.1
+aiohttp==3.7.4
 q==2.6
