@@ -1,0 +1,31 @@
+.a-btn {
+    border: solid .1rem;
+    border-radius: .1rem;
+    font-size: .85em;
+    padding: 1px 2px;
+    margin: 1px 0px;
+}
+.a-btn-normal {
+    border-color: #6ea6e2;
+    color: #007bff;
+}
+.a-btn-info {
+    border-color: #66daec;
+    color: #17a2b8;
+}
+.a-btn-success {
+    border-color: #6ef78d;
+    color: #28a745;
+}
+.a-btn-warning {
+    border-color: #f9d770;
+    color: #ffc107;
+}
+.a-btn-danger {
+    border-color: #f37c87;
+    color: #dc3545;
+}
+.a-btn-muted {
+    border-color: #95a0ab;
+    color: #6c757d;
+}

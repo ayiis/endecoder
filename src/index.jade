@@ -1,0 +1,213 @@
+jade:include templete/head.jade
+
+.container-fluid
+    br
+    .row
+        .col-12
+            .input-group
+                textarea#ta_in.form-control(rows="5", autocomplete="off", autocorrect="off", autocapitalize="off", spellcheck="false", autofocus)
+    br
+    .row
+        .col-4
+            .input-group
+                .input-group-prepend
+                    span.input-group-text 编码方法
+                select#method.form-control
+                    option(val="字符编码转换") 字符编码转换
+                    optgroup(label="网页常用编码")
+                        option(val="URL 特殊字符编码") URL 特殊字符编码
+                        option(val="URL 完全编码") URL 完全编码
+                        option(val="HTML 实体编码") HTML 实体编码
+                        option(val="HTML 十进制编码") HTML 十进制编码
+                        option(val="HTML 十六进制编码") HTML 十六进制编码
+                    optgroup(label="JS常用编码")
+                        option(val="BASE64") BASE64
+                        option(val="ASCII 八进制") ASCII 八进制
+                        option(val="ASCII 十六进制") ASCII 十六进制
+                        option(val="Unicode编码 %u") Unicode编码 %u
+                        option(val="Unicode编码 \u") Unicode编码 \u
+                        option(val="HEX 转换") HEX 转换
+                        option(val="HEX 转换 \x") HEX 转换 \x
+                    optgroup(label="哈希编码")
+                        option(val="MD5 16位") MD5 16位
+                        option(val="MD5 32位") MD5 32位
+                    optgroup(label="其他编码")
+                        option(val="机器内码") 机器内码
+                        //- option(val="ShellCode") ShellCode
+                        option(val="ASP UTF7编码") ASP UTF7编码
+                        option(val="ETERM 国际码") ETERM 国际码
+                        option(val="GBX 中文简繁转换") GBX 中文简繁转换
+        .col-3
+            .input-group
+                .input-group-prepend
+                    span.input-group-text 输入编码
+                select#encodingf.form-control
+                    optgroup(label="支持自定义输入")
+                        option(val="UTF-8") UTF-8
+                        option(val="GB2312") GB2312
+                        option(val="GBK") GBK
+                        option(val="GB18030") GB18030
+                        option(val="BIG5") BIG5
+                        option(val="BIG5HKSCS") BIG5HKSCS
+                        option(val="ISO-8859-1") ISO-8859-1
+                        option(val="UNICODE") UNICODE
+        .col-3
+            .input-group
+                .input-group-prepend
+                    span.input-group-text 输出编码
+                select#encodingt.form-control
+                    optgroup(label="支持自定义输入")
+                        option(val="UTF-8") UTF-8
+                        option(val="GB2312") GB2312
+                        option(val="GBK") GBK
+                        option(val="GB18030") GB18030
+                        option(val="BIG5") BIG5
+                        option(val="BIG5HKSCS") BIG5HKSCS
+                        option(val="ISO-8859-1") ISO-8859-1
+                        option(val="UNICODE") UNICODE
+        .col-2
+            button#btn_encode.btn-sm.btn-primary 编 码
+            button#btn_decode.btn-sm.btn-info 解 码
+    br
+    .row
+        .col-12
+            .input-group
+                textarea#ta_out.form-control(rows="5", autocomplete="off", autocorrect="off", autocapitalize="off", spellcheck="false")
+    br
+    .row
+        .col-6
+            p
+                b URL 编码: &nbsp;
+                span 用于 URL 参数或地址
+            p
+                b HTML 编码: &nbsp;
+                span 用于 HTML 内的字符串
+            p
+                b ASCII 八进制 / 十六进制: &nbsp;
+                span 用于 js / xss
+            p
+                b Unicode 编码: &nbsp;
+                span 用于 js / xss
+        .col-6
+            p
+                b 机器内码: &nbsp;
+                span Windows 用，通过 Alt + [小键盘数字] 输入，通常是 GBK 编码
+            p
+                b UTF7编码: &nbsp;
+                span ASP 语言默认支持的编码
+            p
+                b ETERM 国际码: &nbsp;
+                span ETERM 的中文编码
+
+jade:include templete/bottom.jade
+link(href="/static/css/select2.min.css", rel="stylesheet")
+link(href="/static/css/select2-bootstrap4.min.css", rel="stylesheet")
+script(src="/static/js/select2.min.js")
+script.
+    $(document).ready(() => {
+        $("#method").select2({
+            theme: "bootstrap4",
+        });
+        $("#encodingf").select2({
+            theme: "bootstrap4",
+            tags: true,
+        });
+        $("#encodingt").select2({
+            theme: "bootstrap4",
+            tags: true,
+            //- disabled: true,
+        });
+    });
+    $("#method").on("select2:select", (e)=> {
+        if (e.params.data.id == "字符编码转换") {
+            $("#encodingt").attr("disabled", null);
+        } else {
+            $("#encodingt").attr("disabled", "disabled");
+        }
+    });
+    $("#fund_select").on("select2:unselect", (e)=> {
+        GW.remove_chart_line(e.params.data.id);
+    });
+
+    // 快捷键
+    $("#ta_in, #ta_out").on("keydown", function(event) {
+        if((event.ctrlKey || event.metaKey)) {
+            if(event.key == "e") {
+                do_encode();
+            } else if(event.key == "d") {
+                do_decode();
+            } else if(event.key == "u") {
+                $(this).val($(this).val().toUpperCase());
+            } else if(event.key == "l") {
+                $(this).val($(this).val().toLowerCase());
+            } else {
+                return true;
+            }
+            return false;
+        }
+    });
+    $(document).on("keydown", function(event) {
+        if((event.ctrlKey || event.metaKey)) {
+            if(event.key == "e") {
+                do_encode();
+                return false;
+            } else if(event.key == "d") {
+                do_decode();
+                return false;
+            }
+        }
+    });
+
+    $("#btn_encode").on("click", do_encode);
+    $("#btn_decode").on("click", do_decode);
+
+    function get_para() {
+        return {
+            "ta_in": $("#ta_in").val(),
+            "ta_out": $("#ta_out").val(),
+            "method": $("#method").val(),
+            "encodingt": $("#encodingt").val(),
+            "encodingf": $("#encodingf").val(),
+        }
+    }
+
+    function do_encode() {
+        let req_data = get_para();
+        $("#ta_out").val(null);
+        common.api_post({
+            url: "/api/encode",
+            data: req_data,
+            success: (res)=> {
+                console.log(res);
+                if(res.code == 0) {
+                    $("#ta_out").val(res.data);
+                } else {
+                    $.notify(res.desc, "error");
+                }
+            },
+        });
+    }
+
+    function do_decode() {
+        let req_data = get_para();
+        $("#ta_in").val(null);
+        common.api_post({
+            url: "/api/decode",
+            data: req_data,
+            success: (res)=> {
+                console.log(res);
+                if(res.code == 0) {
+                    $("#ta_in").val(res.data);
+                } else {
+                    $.notify(res.desc, "error");
+                }
+            },
+        });
+    }
+
+    $("#ta_in").attr("placeholder", "编码: 在此输入字符串，点击 [编码]\n\n快捷键: 编码 Ctrl+E / 解码 Ctrl+D / 转大写 Ctrl+U / 转小写 Ctrl+L");
+    $("#ta_out").attr("placeholder", "解码: 在此输入编码后的字符串，点击 [解码]");
+    $("title").text("常用编码转换");
+
+jade:include templete/tail.jade
+
