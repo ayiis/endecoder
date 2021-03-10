@@ -37,6 +37,7 @@ jade:include templete/head.jade
                         option(val="ASP UTF7编码") ASP UTF7编码
                         option(val="ETERM 国际码") ETERM 国际码
                         option(val="GBX 中文简繁转换") GBX 中文简繁转换
+                        option(val="war3 字符串转ID") war3 字符串转ID
         .col-3
             .input-group
                 .input-group-prepend
@@ -100,9 +101,9 @@ jade:include templete/head.jade
                 span ETERM 的中文编码
 
 jade:include templete/bottom.jade
-link(href="/static/css/select2.min.css", rel="stylesheet")
-link(href="/static/css/select2-bootstrap4.min.css", rel="stylesheet")
-script(src="/static/js/select2.min.js")
+link(href="./static/css/select2.min.css", rel="stylesheet")
+link(href="./static/css/select2-bootstrap4.min.css", rel="stylesheet")
+script(src="./static/js/select2.min.js")
 script.
     $(document).ready(() => {
         $("#method").select2({
@@ -175,7 +176,7 @@ script.
         let req_data = get_para();
         $("#ta_out").val(null);
         common.api_post({
-            url: "/api/encode",
+            url: "./api/encode",
             data: req_data,
             success: (res)=> {
                 console.log(res);
@@ -192,7 +193,7 @@ script.
         let req_data = get_para();
         $("#ta_in").val(null);
         common.api_post({
-            url: "/api/decode",
+            url: "./api/decode",
             data: req_data,
             success: (res)=> {
                 console.log(res);

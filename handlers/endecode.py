@@ -19,6 +19,7 @@ from ._raw_endecoder import (
     international_encode, international_decode,
     utf7_encode, utf7_decode,
     machine_encode, machine_decode,
+    war3_s2ih, war3_ih2s,
 
     # 不可逆
     md5_encoder_16, md5_encoder_32,
@@ -44,6 +45,7 @@ r"""
     ✅ ASP UTF7编码
     ✅ ETERM 国际码
     ✅ GBX 中文简繁转换
+    ✅ war3 字符串ID
 """
 
 LMB_NONE = lambda *_: ""
@@ -69,6 +71,7 @@ ENCODERS = {
     "ETERM 国际码": international_encode,
     "ASP UTF7编码": utf7_encode,
     "机器内码": machine_encode,
+    "war3 字符串转ID": war3_s2ih,
 }
 
 DECODERS = {
@@ -92,6 +95,7 @@ DECODERS = {
     "ETERM 国际码": international_decode,
     "ASP UTF7编码": utf7_decode,
     "机器内码": machine_decode,
+    "war3 字符串转ID": war3_ih2s,
 }
 
 

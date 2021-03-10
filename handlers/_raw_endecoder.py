@@ -3,7 +3,7 @@ import codecs
 import hashlib
 import base64
 from urllib.parse import unquote, quote
-import opencc
+import zhconv
 import html
 
 
@@ -40,7 +40,7 @@ def url_encoder(in_text, in_byte, encoding_to, encoding_from):
 
 def chinese_s2t(in_text, in_byte, encoding_to, encoding_from):
 
-    return opencc.OpenCC("s2t.json").convert(in_text)
+    return zhconv.convert(in_text, "zh-tw")
 
 
 def hex_encoder(in_text, in_byte, encoding_to, encoding_from):
@@ -95,12 +95,52 @@ def international_encode(in_text, in_byte, encoding_to, encoding_from):
 
 def utf7_encode(in_text, in_byte, encoding_to, encoding_from):
 
-    return codecs.decode(codecs.encode(in_text, "utf7"))
+    bin1 = "".join("{:016b}".format(ord(c)) for c in in_text)
+    bin1 = bin1 + "0" * ((6 - len(bin1) % 6) % 6)
+
+    res = ""
+    for x in range(len(bin1) // 6):
+        s = int(bin1[x * 6: x * 6 + 6], 2)
+        if s == 63:
+            c = "/"
+        elif s == 62:
+            c = "+"
+        elif 52 <= s:
+            c = chr(ord("0") + s - 52)
+        elif 26 <= s:
+            c = chr(ord("a") + s - 26)
+        else:
+            c = chr(ord("A") + s)
+
+        res = res + c
+
+    return "+%s-" % (res)
 
 
 def machine_encode(in_text, in_byte, encoding_to, encoding_from):
 
     return ",".join([str(int(codecs.encode(t, encoding_from, "replace").hex(), 16)) for t in in_text])
+
+
+def war3_s2ih(in_text, in_byte, encoding_to, encoding_from):
+    res = 0
+    for c in in_text:
+        res = res << 8 | ord(c)
+
+    return "%s, %s" % (res, hex(res))
+
+
+def war3_ih2s(in_text, in_byte, encoding_to, encoding_from):
+
+    in_text = in_text.split(",")[0].strip()
+    i = int(in_text, 16) if "0x" in in_text else int(in_text)
+    res = ""
+
+    while i > 0:
+        i, c = divmod(i, 256)
+        res = chr(c) + res
+
+    return res
 
 
 """
@@ -125,7 +165,7 @@ def url_decoder(out_text, out_byte, encoding_from, encoding_to):
 
 def chinese_t2s(out_text, out_byte, encoding_from, encoding_to):
 
-    return opencc.OpenCC("t2s.json").convert(out_text)
+    return zhconv.convert(out_text, "zh-cn")
 
 
 def hex_decoder(out_text, out_byte, encoding_from, encoding_to):
