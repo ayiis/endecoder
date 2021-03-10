@@ -222,4 +222,3 @@ def machine_decode(out_text, out_byte, encoding_from, encoding_to):
 
     return "".join([bytes.fromhex(format(int(x), "x")).decode(encoding_from) for x in out_text.split(",") if x])
 
-
