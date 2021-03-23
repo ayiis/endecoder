@@ -1,32 +1,37 @@
 
-## 会遇到的几个问题
+## 使用方法
 
-    1. 前端框架，怎么绑定数据
-    2. 前端的模块如何复用
-    3. 如何清除浏览器缓存
+```bash
 
+# 安装依赖
+pip3 install -r requirements.txt
 
-## 概要 ✖️✅❌⚠️⏱
+# 启动程序
+python3 app.py
 
-    ✅ 0. 基于 aiohttp
+```
 
-        🚫 1. 支持 服务器渲染
-            禁止
+## 支持的编码方式
 
-        ⏱ 2. 支持 mongodb
-        ⏱ 3. 支持 redis
-        ⏱ 3. 支持 异步请求外部地址
-
-    ✅ 1. 支持 jade
-
-        POST: 请求与返回都使用 json 格式
-        GET:
-            允许访问 static (资源静态下载)
-            允许访问 src_jade (jade&html，缓存在内存)
-
-api response:
-
-    _good_code = 0
-    _error_code = 500
-
-
+编码方式 | 可以解码 | 支持自选字符
+------- | ------- | -------
+字符编码转换 | ✅ | ✅
+URL 特殊字符编码 | ✅ | ✅
+URL 完全编码 | ✅ | ✅
+HTML 实体编码 | ✅ | ✅
+HTML 十进制编码 | ✅ | ✅
+HTML 十六进制编码 | ✅ | ✅
+BASE64 | ✅ | ✅
+ASCII 八进制 | ✅ | 🚫
+ASCII 十六进制 == ShellCode | ✅ | 🚫
+Unicode编码 %u | ✅ | 🚫
+Unicode编码 \u | ✅ | 🚫
+HEX 转换 | ✅ | 🚫
+HEX 转换 \x | ✅ | 🚫
+MD5 16位 | 🚫 | ✅
+MD5 32位 | 🚫 | ✅
+机器内码 | ✅ | ✅
+ASP UTF7编码 | ✅ | 🚫
+ETERM 国际码 | ✅ | 🚫
+GBX 中文简繁转换 | ✅ | 🚫
+war3 字符串ID | ✅ | 🚫
