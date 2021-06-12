@@ -1,0 +1,80 @@
+jade:include templete/head.jade
+
+.container
+    br
+    br
+    .row
+        .col-12
+            h2 下载中转站
+    br
+    .row
+        .col-12
+            .input-group
+                .input-group-prepend
+                    span.input-group-text 目标地址
+                input#target_url.form-control(type="text", autocomplete="off", autocorrect="off", autocapitalize="off", spellcheck="false", placeholder="https://wodove.com/defult/windows.png", autofocus, value="http://ayiis.me/aydocs/PCHunter_free.zip")
+    br
+    .row
+        .col-10
+            .input-group
+                .input-group-prepend
+                    span.input-group-text 保存文件名
+                input#save_to_name.form-control(type="text", autocomplete="off", autocorrect="off", autocapitalize="off", spellcheck="false", placeholder="windows.png", value="1.zip")
+
+        .col-2
+            button#btn_download.btn-sm.btn-primary 中 转
+    br
+    .row
+        .col-12
+            .input-group
+                .input-group-prepend
+                    span.input-group-text 下载地址
+                input#res_link.form-control(type="text", value="", placeholder="中转完成后显示", disabled)
+
+jade:include templete/bottom.jade
+link(href="./static/css/select2.min.css", rel="stylesheet")
+link(href="./static/css/select2-bootstrap4.min.css", rel="stylesheet")
+script(src="./static/js/select2.min.js")
+script.
+
+    let task_status = 0;    // 0 无，1 正在进行，2 完成 -> 0
+
+    $("#btn_download").on("click", function(){
+        let req_data = {
+            "target_url": $("#target_url").val().trim(),
+            "save_to_name": $("#save_to_name").val().trim(),
+        }
+        $("#res_link").val(null);
+        $("#btn_download").text("请等待...");
+        common.api_post({
+            url: "./api/download_url",
+            data: req_data,
+            success: (res)=> {
+                console.log(res);
+                if(res.code == 0 && res.data == false) {
+                    task_status = 1;
+                    let aa = setInterval(()=> {
+                        common.api_post({
+                            url: "./api/get_download_status",
+                            data: req_data,
+                            success: (res)=> {
+                                console.log(res);
+                                if(res.code == 0 && res.data != false) {
+                                    clearInterval(aa);
+                                    $("#res_link").val(res.data);
+                                    $("#btn_download").text("中 转");
+                                    $("#res_link").attr("disabled", null);
+                                } else {
+                                    $.notify(res.desc, "error");
+                                }
+                            },
+                        });
+                    }, 2000);
+                } else {
+                    $.notify(res.desc, "error");
+                }
+            },
+        });
+    });
+
+jade:include templete/tail.jade

@@ -14,12 +14,14 @@ async def main():
 
     # 启动 web 服务
     from handlers import ApiHandler, TemplateHandler
-    from handlers import endecode
+    from handlers import endecode, downloader
 
     app = aiohttp.web.Application()
     ApiHandler.add_handlers({
         "/api/encode": endecode.encode,
         "/api/decode": endecode.decode,
+        "/api/download_url": downloader.download_url,
+        "/api/get_download_status": downloader.get_download_status,
     })
 
     app.router.add_static("/static/", path="./static/", name="static")  # 静态资源 js css img (下载形式)
