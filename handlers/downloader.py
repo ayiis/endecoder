@@ -16,7 +16,7 @@ save_path = "/opt/nginx-1.10.0/aydocs/downloader/"
 
 dustbin = "/tmp/"
 
-downloader_path = "http://ayiis.me/aydocs/downloader/"
+downloader_path = "https://wodove.com/aydocs/downloader/"
 task_cache = {}
 
 
@@ -70,8 +70,8 @@ async def download_url(req_data):
     loop = asyncio.get_event_loop()
     loop.create_task(do())
 
-    # 48小时后自动删除下载的文件
-    tool.loop_run_at(timeout=60 * 60 * 48, func=clear_one, args=(file_name, ))
+    # 6小时后自动删除下载的文件
+    tool.loop_run_at(timeout=60 * 60 * 6, func=clear_one, args=(file_name, ))
 
     return file_name
 

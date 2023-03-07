@@ -23,7 +23,9 @@ from ._raw_endecoder import (
 
     # 不可逆
     md5_encoder_16, md5_encoder_32,
+    sha_encoder_1, sha_encoder_256, sha_encoder_512
 )
+
 
 r"""
     ✅ 字符编码转换
@@ -54,6 +56,9 @@ ENCODERS = {
     "字符编码转换": default_encoder,
     "MD5 16位": md5_encoder_16,
     "MD5 32位": md5_encoder_32,
+    "SHA1": sha_encoder_1,
+    "SHA256": sha_encoder_256,
+    "SHA512": sha_encoder_512,
     "BASE64": base64_encoder,
     "URL 特殊字符编码": url_char_encoder,
     "URL 完全编码": url_encoder,
@@ -78,6 +83,9 @@ DECODERS = {
     "字符编码转换": default_decoder,
     "MD5 16位": LMB_NONE,
     "MD5 32位": LMB_NONE,
+    "SHA1": LMB_NONE,
+    "SHA256": LMB_NONE,
+    "SHA512": LMB_NONE,
     "BASE64": base64_decoder,
     "URL 特殊字符编码": url_decoder,
     "URL 完全编码": url_decoder,

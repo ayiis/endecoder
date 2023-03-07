@@ -12,6 +12,21 @@ def default_encoder(in_text, in_byte, encoding_to, encoding_from):
     return codecs.decode(in_byte, encoding_to, "replace")
 
 
+def sha_encoder_1(in_text, in_byte, encoding_to, encoding_from):
+
+    return hashlib.sha1(in_byte).hexdigest()
+
+
+def sha_encoder_256(in_text, in_byte, encoding_to, encoding_from):
+
+    return hashlib.sha256(in_byte).hexdigest()
+
+
+def sha_encoder_512(in_text, in_byte, encoding_to, encoding_from):
+
+    return hashlib.sha512(in_byte).hexdigest()
+
+
 def md5_encoder_32(in_text, in_byte, encoding_to, encoding_from):
 
     return hashlib.md5(in_byte).digest().hex()
